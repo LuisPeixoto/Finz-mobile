@@ -1,0 +1,15 @@
+import styled from 'styled-components/native'
+
+export const Container = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+`
+
+export const Title = styled.Text`
+  font-family: 'Lato-Regular';
+  color: #656565;
+  font-size: 24px;
+  margin-top: 32px;
+`
