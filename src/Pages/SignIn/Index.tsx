@@ -19,8 +19,10 @@ import {
   CreateAccountButtonText,
 } from './styles'
 import Icon from 'react-native-vector-icons/Feather'
+import { useNavigation } from '@react-navigation/native'
 
 const SignIn: React.FunctionComponent = () => {
+  const navigation = useNavigation()
   return (
     <>
       <KeyboardAvoidingView
@@ -54,9 +56,9 @@ const SignIn: React.FunctionComponent = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <CreateAccountButton onPress={() => {}}>
+      <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
         <Icon name="log-in" size={20} color="#8584F7" />
-        <CreateAccountButtonText>Criar Conta</CreateAccountButtonText>
+        <CreateAccountButtonText>Criar conta</CreateAccountButtonText>
       </CreateAccountButton>
     </>
   )

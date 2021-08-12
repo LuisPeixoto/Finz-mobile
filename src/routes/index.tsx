@@ -12,7 +12,11 @@ const AuThRoutes: React.FunctionComponent = () => (
       component={SignIn}
       options={{ cardStyle: { backgroundColor: '#fff' } }}
     />
-    <Auth.Screen name="SignUp" component={SignUp} />
+    <Auth.Screen
+      name="SignUp"
+      component={SignUp}
+      options={{ cardStyle: { backgroundColor: '#fff' } }}
+    />
   </Auth.Navigator>
 )
 
