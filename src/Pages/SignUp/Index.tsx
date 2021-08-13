@@ -5,6 +5,7 @@ import {
   Platform,
   View,
   ScrollView,
+  TextInput,
 } from 'react-native'
 import logoImg from '../../assets/logo.png'
 import Input from '../../components/Input'
@@ -18,6 +19,8 @@ import { FormHandles } from '@unform/core'
 
 const SignUp: React.FunctionComponent = () => {
   const formRef = useRef<FormHandles>(null)
+  const emailInputRef = useRef<TextInput>(null)
+  const passwordInputRef = useRef<TextInput>(null)
 
   const navigation = useNavigation()
   return (
@@ -42,20 +45,40 @@ const SignUp: React.FunctionComponent = () => {
                 console.log(data)
               }}
             >
-              <Input name="name" icon="user" placeholder="Nome" />
+              <Input
+                name="name"
+                autoCapitalize="words"
+                icon="user"
+                placeholder="Nome"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  emailInputRef.current?.focus()
+                }}
+              />
               <Input
                 name="email"
                 autoCorrect={false}
+                ref={emailInputRef}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 icon="mail"
                 placeholder="E-mail"
+                onSubmitEditing={() => {
+                  passwordInputRef.current?.focus()
+                }}
+                returnKeyType="next"
               />
               <Input
                 name="password"
+                ref={passwordInputRef}
                 secureTextEntry
                 icon="lock"
                 placeholder="Senha"
+                returnKeyType="send"
+                textContentType="newPassword"
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm()
+                }}
               />
             </Form>
 

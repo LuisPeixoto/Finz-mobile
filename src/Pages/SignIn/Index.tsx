@@ -5,6 +5,7 @@ import {
   Platform,
   View,
   ScrollView,
+  TextInput,
 } from 'react-native'
 import logoImg from '../../assets/logo.png'
 import Input from '../../components/Input'
@@ -26,6 +27,7 @@ import { useNavigation } from '@react-navigation/native'
 const SignIn: React.FunctionComponent = () => {
   const formRef = useRef<FormHandles>(null)
   const navigation = useNavigation()
+  const passwordInputRef = useRef<TextInput>(null)
 
   const handleSignIn = useCallback((data: object) => {
     console.log(data)
@@ -54,12 +56,21 @@ const SignIn: React.FunctionComponent = () => {
                 keyboardType="email-address"
                 icon="mail"
                 placeholder="E-mail"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  passwordInputRef.current?.focus()
+                }}
               />
               <Input
+                ref={passwordInputRef}
                 name="password"
                 secureTextEntry
                 icon="lock"
                 placeholder="Senha"
+                returnKeyType="send"
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm()
+                }}
               />
             </Form>
             <Button
