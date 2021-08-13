@@ -56,17 +56,17 @@ const SignUp: React.FunctionComponent = () => {
                 }}
               />
               <Input
-                name="email"
                 autoCorrect={false}
+                name="email"
                 ref={emailInputRef}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 icon="mail"
                 placeholder="E-mail"
+                returnKeyType="next"
                 onSubmitEditing={() => {
                   passwordInputRef.current?.focus()
                 }}
-                returnKeyType="next"
               />
               <Input
                 name="password"
