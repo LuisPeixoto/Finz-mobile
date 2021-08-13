@@ -43,7 +43,14 @@ const SignUp: React.FunctionComponent = () => {
               }}
             >
               <Input name="name" icon="user" placeholder="Nome" />
-              <Input name="email" icon="mail" placeholder="E-mail" />
+              <Input
+                name="email"
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                icon="mail"
+                placeholder="E-mail"
+              />
               <Input name="password" icon="lock" placeholder="Senha" />
             </Form>
 

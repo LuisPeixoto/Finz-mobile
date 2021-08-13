@@ -47,7 +47,14 @@ const SignIn: React.FunctionComponent = () => {
               <Title>Mantenha-se conectado</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignIn}>
-              <Input name="email" icon="mail" placeholder="E-mail" />
+              <Input
+                name="email"
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                icon="mail"
+                placeholder="E-mail"
+              />
               <Input name="password" icon="lock" placeholder="Senha" />
             </Form>
             <Button
