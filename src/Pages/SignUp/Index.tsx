@@ -51,7 +51,12 @@ const SignUp: React.FunctionComponent = () => {
                 icon="mail"
                 placeholder="E-mail"
               />
-              <Input name="password" icon="lock" placeholder="Senha" />
+              <Input
+                name="password"
+                secureTextEntry
+                icon="lock"
+                placeholder="Senha"
+              />
             </Form>
 
             <Button onPress={() => formRef.current?.submitForm()}>
