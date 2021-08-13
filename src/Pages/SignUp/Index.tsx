@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import {
   Image,
   KeyboardAvoidingView,
@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native'
 import logoImg from '../../assets/logo.png'
 import Input from '../../components/Input'
@@ -16,6 +17,9 @@ import Icon from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native'
 import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
+import * as Yup from 'yup'
+
+import getValidationErrors from '../../utils/getValidatonErrors'
 
 const SignUp: React.FunctionComponent = () => {
   const formRef = useRef<FormHandles>(null)
@@ -23,6 +27,43 @@ const SignUp: React.FunctionComponent = () => {
   const passwordInputRef = useRef<TextInput>(null)
 
   const navigation = useNavigation()
+
+  interface SignInFormData {
+    name: string
+    email: string
+    password: string
+  }
+
+  const handleSignUp = useCallback(async (data: SignInFormData) => {
+    try {
+      formRef.current?.setErrors({})
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string().required('Email obrigatório').email(),
+        password: Yup.string().min(8, 'Senha obrigatória'),
+      })
+
+      await schema.validate(data, {
+        abortEarly: false,
+      })
+
+      // await signIn({
+      //   email: data.email,
+      //   password: data.password,
+      // })
+
+      // history.push('/')
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(error)
+        formRef.current?.setErrors(errors)
+      }
+      Alert.alert(
+        'Erro no cadastro',
+        'Ocorreu um erro ao fazer cadastro, tente novamente',
+      )
+    }
+  }, [])
   return (
     <>
       <KeyboardAvoidingView
@@ -39,12 +80,7 @@ const SignUp: React.FunctionComponent = () => {
             <View>
               <Title>Mantenha-se conectado</Title>
             </View>
-            <Form
-              ref={formRef}
-              onSubmit={(data) => {
-                console.log(data)
-              }}
-            >
+            <Form ref={formRef} onSubmit={handleSignUp}>
               <Input
                 name="name"
                 autoCapitalize="words"
