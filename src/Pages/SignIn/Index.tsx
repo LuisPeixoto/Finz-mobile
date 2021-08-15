@@ -27,6 +27,7 @@ import {
 import Icon from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native'
 import * as Yup from 'yup'
+import { useAuth } from '../../hooks/auth'
 
 interface SignInFormData {
   email: string
@@ -36,37 +37,42 @@ interface SignInFormData {
 const SignIn: React.FunctionComponent = () => {
   const formRef = useRef<FormHandles>(null)
   const navigation = useNavigation()
+
+  const { signIn } = useAuth()
   const passwordInputRef = useRef<TextInput>(null)
 
-  const handleSignIn = useCallback(async (data: SignInFormData) => {
-    try {
-      formRef.current?.setErrors({})
-      const schema = Yup.object().shape({
-        email: Yup.string().required('Email obrigatório').email(),
-        password: Yup.string().min(8, 'Senha obrigatória'),
-      })
+  const handleSignIn = useCallback(
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({})
+        const schema = Yup.object().shape({
+          email: Yup.string().required('Email obrigatório').email(),
+          password: Yup.string().min(8, 'Senha obrigatória'),
+        })
 
-      await schema.validate(data, {
-        abortEarly: false,
-      })
+        await schema.validate(data, {
+          abortEarly: false,
+        })
 
-      // await signIn({
-      //   email: data.email,
-      //   password: data.password,
-      // })
+        await signIn({
+          email: data.email,
+          password: data.password,
+        })
 
-      // history.push('/')
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(error)
-        formRef.current?.setErrors(errors)
-        Alert.alert(
-          'Erro na autenticacão',
-          'Ocorreu um erro ao fazer login, cheque as credencias',
-        )
+        // history.push('/')
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error)
+          formRef.current?.setErrors(errors)
+          Alert.alert(
+            'Erro na autenticacão',
+            'Ocorreu um erro ao fazer login, cheque as credencias',
+          )
+        }
       }
-    }
-  }, [])
+    },
+    [signIn],
+  )
   return (
     <>
       <KeyboardAvoidingView
