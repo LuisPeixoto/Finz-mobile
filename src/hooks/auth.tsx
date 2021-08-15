@@ -20,6 +20,7 @@ interface SigninCredentials {
 
 interface AuthContextData {
   user: object
+  loading: boolean
   signIn(credentials: SigninCredentials): Promise<void>
   signOut(): void
 }
@@ -28,19 +29,23 @@ export const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 export const AuthProvider: React.FunctionComponent = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    ;() => {
-      async function loadStorageData(): Promise<void> {
-        const token = await AsyncStorage.getItem('@Finz:token')
-        const user = await AsyncStorage.getItem('@Finz:user')
+    async function loadStorageData(): Promise<void> {
+      const [token, user] = await AsyncStorage.multiGet([
+        '@Finz:token',
+        '@Finz:user',
+      ])
 
-        if (token[1] && user[1]) {
-          setData({ token: token[1], user: JSON.parse(user[1]) })
-        }
+      if (token[1] && user[1]) {
+        api.defaults.headers.authorization = `Bearer ${token[1]}`
+        setData({ token: token[1], user: JSON.parse(user[1]) })
       }
-      loadStorageData()
+
+      setLoading(false)
     }
+    loadStorageData()
   }, [])
   const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post('sessions', {
@@ -57,14 +62,14 @@ export const AuthProvider: React.FunctionComponent = ({ children }) => {
   }, [])
 
   const signOut = useCallback(async () => {
-    await AsyncStorage.removeItem('@Gobarber:token')
-    await AsyncStorage.removeItem('@Gobarber:user')
+    await AsyncStorage.removeItem('@Finz:token')
+    await AsyncStorage.removeItem('@Finz:user')
 
     setData({} as AuthState)
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )
