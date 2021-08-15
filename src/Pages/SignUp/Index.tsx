@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native'
 import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
+import Api from '../../services/api'
 import * as Yup from 'yup'
 
 import getValidationErrors from '../../utils/getValidatonErrors'
@@ -34,36 +35,41 @@ const SignUp: React.FunctionComponent = () => {
     password: string
   }
 
-  const handleSignUp = useCallback(async (data: SignInFormData) => {
-    try {
-      formRef.current?.setErrors({})
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        email: Yup.string().required('Email obrigatório').email(),
-        password: Yup.string().min(8, 'Senha obrigatória'),
-      })
+  const handleSignUp = useCallback(
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({})
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string().required('Email obrigatório').email(),
+          password: Yup.string().min(8, 'Senha obrigatória'),
+        })
 
-      await schema.validate(data, {
-        abortEarly: false,
-      })
+        await schema.validate(data, {
+          abortEarly: false,
+        })
 
-      // await signIn({
-      //   email: data.email,
-      //   password: data.password,
-      // })
+        await Api.post('/users', data)
 
-      // history.push('/')
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(error)
-        formRef.current?.setErrors(errors)
+        Alert.alert(
+          'Cadastro realizado com sucesso!',
+          'Você ja pode fazer login na aplicação',
+        )
+
+        navigation.navigate('SignIn')
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error)
+          formRef.current?.setErrors(errors)
+        }
+        Alert.alert(
+          'Erro no cadastro',
+          'Ocorreu um erro ao fazer cadastro, tente novamente',
+        )
       }
-      Alert.alert(
-        'Erro no cadastro',
-        'Ocorreu um erro ao fazer cadastro, tente novamente',
-      )
-    }
-  }, [])
+    },
+    [navigation],
+  )
   return (
     <>
       <KeyboardAvoidingView
