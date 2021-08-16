@@ -7,6 +7,7 @@ import {
   ScrollView,
   TextInput,
   Alert,
+  StatusBar,
 } from 'react-native'
 import logoImg from '../../assets/logo.png'
 import Input from '../../components/Input'
@@ -75,6 +76,8 @@ const SignIn: React.FunctionComponent = () => {
   )
   return (
     <>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

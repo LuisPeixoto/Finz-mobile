@@ -5,7 +5,7 @@ import Home from '../Pages/Home'
 const App = createStackNavigator()
 
 const AppRoutes: React.FunctionComponent = () => (
-  <App.Navigator>
+  <App.Navigator screenOptions={{ headerShown: false }}>
     <App.Screen
       name="Home"
       component={Home}
