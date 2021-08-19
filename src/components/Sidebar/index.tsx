@@ -1,6 +1,7 @@
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
 import React from 'react'
 import Icon from 'react-native-vector-icons/Feather'
+import { useAuth } from '../../hooks/auth'
 import {
   Container,
   Header,
@@ -13,6 +14,8 @@ import {
 } from './styles'
 
 const Sidebar: React.FunctionComponent = ({ ...props }) => {
+  const { signOut } = useAuth()
+
   return (
     <Container>
       <Header>
@@ -48,7 +51,7 @@ const Sidebar: React.FunctionComponent = ({ ...props }) => {
 
           <DrawerItem
             label="Sair"
-            onPress={() => {}}
+            onPress={signOut}
             icon={({ color, size }) => (
               <Icon name="log-out" color={color} size={size} />
             )}
